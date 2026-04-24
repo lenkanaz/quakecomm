@@ -8,6 +8,14 @@ I built QuakeComm to solve that.
 
 ---
 
+## Live Demo
+
+User Interface: https://thriving-melba-5edbf5.netlify.app
+
+Admin Panel: https://thriving-melba-5edbf5.netlify.app/admin.html
+
+---
+
 ## The Problem
 
 Existing emergency apps assume internet. WhatsApp assumes internet. AFAD's system assumes internet.
