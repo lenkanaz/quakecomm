@@ -35,29 +35,29 @@
       <div id="buttons">
         <button class="status-btn" id="btn-critical" data-status="critical">
           <span class="btn-dot critical-dot"></span>
-          <span class="btn-label">INJURED</span>
+          <span class="btn-label" data-i18n="injured">INJURED</span>
           <span class="btn-code mono">PRIORITY 1</span>
         </button>
         <button class="status-btn" id="btn-trapped" data-status="trapped">
           <span class="btn-dot trapped-dot"></span>
-          <span class="btn-label">TRAPPED</span>
+          <span class="btn-label" data-i18n="trapped">TRAPPED</span>
           <span class="btn-code mono">PRIORITY 2</span>
         </button>
         <button class="status-btn" id="btn-safe" data-status="safe">
           <span class="btn-dot safe-dot"></span>
-          <span class="btn-label">SAFE</span>
+          <span class="btn-label" data-i18n="safe">SAFE</span>
           <span class="btn-code mono">PRIORITY 3</span>
         </button>
       </div>
 
       <div id="note-wrapper">
-        <label class="mono" id="note-label">// ADDITIONAL INFO</label>
+        <label class="mono" id="note-label" data-i18n="additional_info">// ADDITIONAL INFO</label>
         <textarea id="note" placeholder="Describe your situation..." maxlength="100"></textarea>
         <span id="char-count" class="mono">0/100</span>
       </div>
 
       <button id="send-btn">
-        <span id="send-label">TRANSMIT SIGNAL</span>
+        <span id="send-label" data-i18n="transmit">TRANSMIT SIGNAL</span>
         <span id="send-icon">⟶</span>
       </button>
 
@@ -66,6 +66,13 @@
     </div>
 
     <div id="footer" class="mono">
+      <div id="lang-bar">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('tr')">TR</button>
+        <button class="lang-btn" onclick="setLang('de')">DE</button>
+        <button class="lang-btn" onclick="setLang('el')">ΕΛ</button>
+        <button class="lang-btn" onclick="setLang('it')">IT</button>
+      </div>
       GPS: <span id="gps-status">ACQUIRING...</span>
       &nbsp;|&nbsp;
       MODE: <span id="mode-status">ONLINE</span>
@@ -78,6 +85,25 @@
   <script src="app.js"></script>
 
   <script>
+    const TRANSLATIONS = {
+      en: { injured: 'INJURED', trapped: 'TRAPPED', safe: 'SAFE', additional_info: '// ADDITIONAL INFO', transmit: 'TRANSMIT SIGNAL', placeholder: 'Describe your situation...' },
+      tr: { injured: 'YARALIYIM', trapped: 'MAHSURUM', safe: 'SAĞLAMIM', additional_info: '// EK BİLGİ', transmit: 'SİNYAL GÖNDER', placeholder: 'Durumunuzu açıklayın...' },
+      de: { injured: 'VERLETZT', trapped: 'EINGESCHLOSSEN', safe: 'SICHER', additional_info: '// ZUSATZINFO', transmit: 'SIGNAL SENDEN', placeholder: 'Beschreiben Sie Ihre Situation...' },
+      el: { injured: 'ΤΡΑΥΜΑΤΙΑΣ', trapped: 'ΠΑΓΙΔΕΥΜΕΝΟΣ', safe: 'ΑΣΦΑΛΗΣ', additional_info: '// ΕΠΙΠΛΕΟΝ ΠΛΗΡΟΦΟΡΙΕΣ', transmit: 'ΑΠΟΣΤΟΛΗ ΣΗΜΑΤΟΣ', placeholder: 'Περιγράψτε την κατάστασή σας...' },
+      it: { injured: 'FERITO', trapped: 'INTRAPPOLATO', safe: 'SICURO', additional_info: '// INFO AGGIUNTIVE', transmit: 'TRASMETTI SEGNALE', placeholder: 'Descrivi la tua situazione...' }
+    };
+
+    function setLang(lang) {
+      const t = TRANSLATIONS[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+      });
+      document.getElementById('note').placeholder = t.placeholder;
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
     // Radar canvas animation
     const canvas = document.getElementById('radar-canvas');
     const ctx = canvas.getContext('2d');
@@ -104,7 +130,6 @@
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Rings
       [0.3, 0.55, 0.8, 1].forEach(scale => {
         ctx.beginPath();
         ctx.arc(cx, cy, maxR * scale, 0, Math.PI * 2);
@@ -113,16 +138,10 @@
         ctx.stroke();
       });
 
-      // Cross lines
       ctx.strokeStyle = 'rgba(0, 200, 80, 0.06)';
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(cx - maxR, cy); ctx.lineTo(cx + maxR, cy); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(cx, cy - maxR); ctx.lineTo(cx, cy + maxR); ctx.stroke();
-
-      // Sweep
-      const gradient = ctx.createConicalGradient
-        ? null
-        : null;
 
       ctx.save();
       ctx.translate(cx, cy);
@@ -140,7 +159,6 @@
       ctx.fillStyle = sweep;
       ctx.fill();
 
-      // Sweep line
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.lineTo(maxR, 0);
@@ -150,7 +168,6 @@
 
       ctx.restore();
 
-      // Dots
       dots.forEach(dot => {
         const da = ((angle - dot.a) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
         if (da < 0.15) dot.brightness = 1;
@@ -173,7 +190,6 @@
         }
       });
 
-      // Center dot
       ctx.beginPath();
       ctx.arc(cx, cy, 3, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(0, 255, 80, 0.6)';
@@ -185,7 +201,6 @@
 
     draw();
 
-    // Char counter
     const noteEl = document.getElementById('note');
     const charCount = document.getElementById('char-count');
     if (noteEl) {
@@ -194,7 +209,6 @@
       });
     }
 
-    // Button selection
     document.querySelectorAll('.status-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));

@@ -29,7 +29,6 @@ body {
   position: relative;
 }
 
-/* Radar background */
 #radar-bg {
   position: fixed;
   inset: 0;
@@ -42,7 +41,6 @@ body {
   height: 100%;
 }
 
-/* Scanline overlay */
 #scanline {
   position: fixed;
   inset: 0;
@@ -57,7 +55,6 @@ body {
   z-index: 1;
 }
 
-/* App */
 #app {
   position: relative;
   z-index: 2;
@@ -75,7 +72,6 @@ body {
 
 .mono { font-family: 'Share Tech Mono', monospace; }
 
-/* Header */
 #header { margin-bottom: 20px; }
 
 #logo-line {
@@ -113,7 +109,6 @@ body {
   text-transform: uppercase;
 }
 
-/* Divider */
 #divider {
   height: 1px;
   background: linear-gradient(90deg, var(--green), transparent);
@@ -121,7 +116,6 @@ body {
   opacity: 0.3;
 }
 
-/* Instruction */
 #instruction {
   font-size: 0.65rem;
   letter-spacing: 3px;
@@ -130,7 +124,6 @@ body {
   text-transform: uppercase;
 }
 
-/* Buttons */
 #buttons {
   display: flex;
   flex-direction: column;
@@ -208,7 +201,6 @@ body {
   letter-spacing: 1px;
 }
 
-/* Note */
 #note-wrapper {
   position: relative;
   margin-bottom: 18px;
@@ -250,7 +242,6 @@ body {
   letter-spacing: 1px;
 }
 
-/* Send */
 #send-btn {
   width: 100%;
   padding: 17px;
@@ -283,7 +274,6 @@ body {
 
 #send-btn:hover #send-icon { transform: translateX(5px); }
 
-/* Feedback */
 #feedback {
   text-align: center;
   font-size: 0.62rem;
@@ -293,7 +283,6 @@ body {
   min-height: 14px;
 }
 
-/* Footer */
 #footer {
   margin-top: 22px;
   padding-top: 14px;
@@ -308,3 +297,33 @@ body {
 #gps-status  { color: var(--trapped); }
 #mode-status { color: var(--safe); }
 #sig-strength { color: var(--green); letter-spacing: 0; }
+
+#lang-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+.lang-btn {
+  padding: 3px 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.lang-btn.active {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.lang-btn:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
