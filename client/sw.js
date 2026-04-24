@@ -3,7 +3,7 @@
 // Service Worker
 // ========================
 
-const CACHE_NAME = 'quakecomm-v1';
+const CACHE_NAME = 'quakecomm-v0';
 
 const ASSETS = [
   '/',
