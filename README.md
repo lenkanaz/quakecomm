@@ -133,7 +133,7 @@ GPS not acquired on first load. Some browsers require a user gesture before gran
 ---
 
 ## How to Run
-
+  ```
 git clone https://github.com/lenkanaz/quakecomm
 cd quakecomm
 py -3.11 -m pip install fastapi uvicorn twilio psycopg2-binary python-dotenv matplotlib
@@ -141,13 +141,13 @@ cd backend
 py -3.11 -m uvicorn main:app --reload
 cd simulation
 py -3.11 simulate.py
-
+ ```
 Open client/index.html and client/admin.html with Live Server in VS Code.
-
+  
 ---
 
 ## Project Structure
-
+```
 quakecomm/
 ├── client/
 │   ├── index.html        — User PWA
@@ -173,7 +173,7 @@ quakecomm/
 │   ├── failure_modes.md
 │   └── system_tradeoffs.md
 └── README.md
-
+```
 ---
 
 ## References
