@@ -82,8 +82,6 @@
 
   </div>
 
-  <script src="app.js"></script>
-
   <script>
     const TRANSLATIONS = {
       en: { injured: 'INJURED', trapped: 'TRAPPED', safe: 'SAFE', additional_info: '// ADDITIONAL INFO', transmit: 'TRANSMIT SIGNAL', placeholder: 'Describe your situation...' },
@@ -199,22 +197,9 @@
     }
 
     draw();
-
-    const noteEl = document.getElementById('note');
-    const charCount = document.getElementById('char-count');
-    if (noteEl) {
-      noteEl.addEventListener('input', () => {
-        charCount.textContent = noteEl.value.length + '/100';
-      });
-    }
-
-    document.querySelectorAll('.status-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-      });
-    });
   </script>
+
+  <script src="app.js"></script>
 
 </body>
 </html>
