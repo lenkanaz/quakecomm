@@ -67,11 +67,11 @@
 
     <div id="footer" class="mono">
       <div id="lang-bar">
-        <button class="lang-btn active" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" onclick="setLang('tr')">TR</button>
-        <button class="lang-btn" onclick="setLang('de')">DE</button>
-        <button class="lang-btn" onclick="setLang('el')">ΕΛ</button>
-        <button class="lang-btn" onclick="setLang('it')">IT</button>
+        <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
+        <button class="lang-btn" onclick="setLang('tr', this)">TR</button>
+        <button class="lang-btn" onclick="setLang('de', this)">DE</button>
+        <button class="lang-btn" onclick="setLang('el', this)">EL</button>
+        <button class="lang-btn" onclick="setLang('it', this)">IT</button>
       </div>
       GPS: <span id="gps-status">ACQUIRING...</span>
       &nbsp;|&nbsp;
@@ -87,24 +87,23 @@
   <script>
     const TRANSLATIONS = {
       en: { injured: 'INJURED', trapped: 'TRAPPED', safe: 'SAFE', additional_info: '// ADDITIONAL INFO', transmit: 'TRANSMIT SIGNAL', placeholder: 'Describe your situation...' },
-      tr: { injured: 'YARALIYIM', trapped: 'MAHSURUM', safe: 'SAĞLAMIM', additional_info: '// EK BİLGİ', transmit: 'SİNYAL GÖNDER', placeholder: 'Durumunuzu açıklayın...' },
+      tr: { injured: 'YARALIYIM', trapped: 'MAHSURUM', safe: 'SAGLAMIM', additional_info: '// EK BILGI', transmit: 'SINYAL GONDER', placeholder: 'Durumunuzu aciklayin...' },
       de: { injured: 'VERLETZT', trapped: 'EINGESCHLOSSEN', safe: 'SICHER', additional_info: '// ZUSATZINFO', transmit: 'SIGNAL SENDEN', placeholder: 'Beschreiben Sie Ihre Situation...' },
-      el: { injured: 'ΤΡΑΥΜΑΤΙΑΣ', trapped: 'ΠΑΓΙΔΕΥΜΕΝΟΣ', safe: 'ΑΣΦΑΛΗΣ', additional_info: '// ΕΠΙΠΛΕΟΝ ΠΛΗΡΟΦΟΡΙΕΣ', transmit: 'ΑΠΟΣΤΟΛΗ ΣΗΜΑΤΟΣ', placeholder: 'Περιγράψτε την κατάστασή σας...' },
+      el: { injured: 'TRAUMATIAS', trapped: 'PAGIDEUOMENOS', safe: 'ASFALOS', additional_info: '// PLIROFOIRIES', transmit: 'APOSTOLI SIMATOS', placeholder: 'Perigraste tin katastasi sas...' },
       it: { injured: 'FERITO', trapped: 'INTRAPPOLATO', safe: 'SICURO', additional_info: '// INFO AGGIUNTIVE', transmit: 'TRASMETTI SEGNALE', placeholder: 'Descrivi la tua situazione...' }
     };
 
-    function setLang(lang) {
+    function setLang(lang, btn) {
       const t = TRANSLATIONS[lang];
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (t[key]) el.textContent = t[key];
       });
       document.getElementById('note').placeholder = t.placeholder;
-      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     }
 
-    // Radar canvas animation
     const canvas = document.getElementById('radar-canvas');
     const ctx = canvas.getContext('2d');
     let angle = 0;
