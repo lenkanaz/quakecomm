@@ -2,7 +2,7 @@
 // QuakeComm — app.js
 // ========================
 
-const API_URL = 'http://127.0.0.1:8000';
+const API_URL = 'https://quakecomm-production.up.railway.app';
 
 // --- State ---
 let selectedStatus = null;
