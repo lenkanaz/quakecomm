@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#030a03" />
+  <title>QuakeComm</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+
+  <div id="radar-bg">
+    <canvas id="radar-canvas"></canvas>
+  </div>
+
+  <div id="scanline"></div>
+
+  <div id="app">
+
+    <div id="header">
+      <div id="logo-line">
+        <div id="signal-dot"></div>
+        <h1>QUAKECOMM</h1>
+      </div>
+      <p id="status-bar" class="mono">SYS: CHECKING CONNECTION...</p>
+    </div>
+
+    <div id="divider"></div>
+
+    <div id="main">
+
+      <p id="instruction" class="mono">// SELECT STATUS</p>
+
+      <div id="buttons">
+        <button class="status-btn" id="btn-critical" data-status="critical">
+          <span class="btn-dot critical-dot"></span>
+          <span class="btn-label">INJURED</span>
+          <span class="btn-code mono">PRIORITY 1</span>
+        </button>
+        <button class="status-btn" id="btn-trapped" data-status="trapped">
+          <span class="btn-dot trapped-dot"></span>
+          <span class="btn-label">TRAPPED</span>
+          <span class="btn-code mono">PRIORITY 2</span>
+        </button>
+        <button class="status-btn" id="btn-safe" data-status="safe">
+          <span class="btn-dot safe-dot"></span>
+          <span class="btn-label">SAFE</span>
+          <span class="btn-code mono">PRIORITY 3</span>
+        </button>
+      </div>
+
+      <div id="note-wrapper">
+        <label class="mono" id="note-label">// ADDITIONAL INFO</label>
+        <textarea id="note" placeholder="Describe your situation..." maxlength="100"></textarea>
+        <span id="char-count" class="mono">0/100</span>
+      </div>
+
+      <button id="send-btn">
+        <span id="send-label">TRANSMIT SIGNAL</span>
+        <span id="send-icon">⟶</span>
+      </button>
+
+      <p id="feedback" class="mono"></p>
+
+    </div>
+
+    <div id="footer" class="mono">
+      GPS: <span id="gps-status">ACQUIRING...</span>
+      &nbsp;|&nbsp;
+      MODE: <span id="mode-status">ONLINE</span>
+      &nbsp;|&nbsp;
+      SIG: <span id="sig-strength">██░░░</span>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+
+  <script>
+    // Radar canvas animation
+    const canvas = document.getElementById('radar-canvas');
+    const ctx = canvas.getContext('2d');
+    let angle = 0;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    const dots = Array.from({length: 6}, () => ({
+      r: Math.random() * 180 + 40,
+      a: Math.random() * Math.PI * 2,
+      brightness: 0
+    }));
+
+    function draw() {
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const maxR = Math.min(canvas.width, canvas.height) * 0.42;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Rings
+      [0.3, 0.55, 0.8, 1].forEach(scale => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, maxR * scale, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0, 200, 80, 0.07)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      // Cross lines
+      ctx.strokeStyle = 'rgba(0, 200, 80, 0.06)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(cx - maxR, cy); ctx.lineTo(cx + maxR, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, cy - maxR); ctx.lineTo(cx, cy + maxR); ctx.stroke();
+
+      // Sweep
+      const gradient = ctx.createConicalGradient
+        ? null
+        : null;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+
+      const sweep = ctx.createLinearGradient(0, 0, maxR, 0);
+      sweep.addColorStop(0, 'rgba(0, 220, 80, 0.0)');
+      sweep.addColorStop(0.7, 'rgba(0, 220, 80, 0.06)');
+      sweep.addColorStop(1, 'rgba(0, 220, 80, 0.18)');
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, maxR, -0.35, 0);
+      ctx.closePath();
+      ctx.fillStyle = sweep;
+      ctx.fill();
+
+      // Sweep line
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(maxR, 0);
+      ctx.strokeStyle = 'rgba(0, 255, 80, 0.35)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.restore();
+
+      // Dots
+      dots.forEach(dot => {
+        const da = ((angle - dot.a) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+        if (da < 0.15) dot.brightness = 1;
+        else dot.brightness *= 0.985;
+
+        if (dot.brightness > 0.05) {
+          const dx = cx + Math.cos(dot.a) * dot.r * (maxR / 200);
+          const dy = cy + Math.sin(dot.a) * dot.r * (maxR / 200);
+          ctx.beginPath();
+          ctx.arc(dx, dy, 3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(0, 255, 100, ${dot.brightness * 0.9})`;
+          ctx.fill();
+
+          if (dot.brightness > 0.3) {
+            ctx.beginPath();
+            ctx.arc(dx, dy, 8, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 255, 100, ${dot.brightness * 0.08})`;
+            ctx.fill();
+          }
+        }
+      });
+
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 255, 80, 0.6)';
+      ctx.fill();
+
+      angle += 0.012;
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    // Char counter
+    const noteEl = document.getElementById('note');
+    const charCount = document.getElementById('char-count');
+    if (noteEl) {
+      noteEl.addEventListener('input', () => {
+        charCount.textContent = noteEl.value.length + '/100';
+      });
+    }
+
+    // Button selection
+    document.querySelectorAll('.status-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+    });
+  </script>
+
+</body>
+</html>

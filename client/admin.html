@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuakeComm — Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+  <div id="sidebar">
+
+    <div id="sidebar-header">
+      <div id="logo-line">
+        <div id="signal-dot"></div>
+        <h1>QUAKECOMM</h1>
+      </div>
+      <p class="mono" id="status-bar" data-i18n="rescue_center">RESCUE COMMAND CENTER</p>
+    </div>
+
+    <div id="lang-selector">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="tr">TR</button>
+      <button class="lang-btn" data-lang="de">DE</button>
+      <button class="lang-btn" data-lang="el">ΕΛ</button>
+      <button class="lang-btn" data-lang="it">IT</button>
+    </div>
+
+    <div id="view-toggle">
+      <button class="toggle-btn active" id="btn-certainty" data-i18n="certainty">CERTAINTY</button>
+      <button class="toggle-btn" id="btn-uncertainty" data-i18n="uncertainty">UNCERTAINTY</button>
+    </div>
+
+    <div id="stats">
+      <div class="stat-box">
+        <span class="stat-label mono" data-i18n="total">TOTAL</span>
+        <span class="stat-value" id="stat-total">0</span>
+      </div>
+      <div class="stat-box critical-box">
+        <span class="stat-label mono" data-i18n="critical">CRITICAL</span>
+        <span class="stat-value critical-val" id="stat-critical">0</span>
+      </div>
+      <div class="stat-box trapped-box">
+        <span class="stat-label mono" data-i18n="trapped">TRAPPED</span>
+        <span class="stat-value trapped-val" id="stat-trapped">0</span>
+      </div>
+      <div class="stat-box safe-box">
+        <span class="stat-label mono" data-i18n="safe">SAFE</span>
+        <span class="stat-value safe-val" id="stat-safe">0</span>
+      </div>
+    </div>
+
+    <div id="divider"></div>
+
+    <p class="mono section-label" data-i18n="priority_list">// PRIORITY LIST</p>
+
+    <div id="signal-list"></div>
+
+  </div>
+
+  <div id="map-container">
+    <div id="map"></div>
+    <div id="map-overlay">
+      <span class="mono" id="conflict-badge" style="display:none">⚠ CONFLICTS DETECTED</span>
+    </div>
+    <div id="refresh-btn" onclick="loadData()" data-i18n="refresh">↻ REFRESH</div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="admin.js"></script>
+
+</body>
+</html>
